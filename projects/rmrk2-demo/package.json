@@ -1,0 +1,30 @@
+{
+  "name": "rmrk2-demo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^1.6.8",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
+    "framer-motion": "^4",
+    "next": "11.1.2",
+    "ramda": "^0.27.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-inlinesvg": "^2.3.0",
+    "rmrk-tools": "^2.0.11"
+  },
+  "devDependencies": {
+    "@types/react": "17.0.24",
+    "eslint": "7.32.0",
+    "eslint-config-next": "11.1.2",
+    "prettier": "^2.4.1",
+    "typescript": "4.4.3"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "rmrk2-demo-scripts",
+  "version": "1.0.0",
+  "description": "RMRK2 demo scripts",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "fetch": "rmrk-tools-fetch",
+    "consolidate": "rmrk-tools-consolidate"
+  },
+  "dependencies": {
+    "@pinata/sdk": "^1.1.23",
+    "@polkadot/api": "^6.0.4",
+    "@polkadot/keyring": "^7.4.1",
+    "@polkadot/util-crypto": "^7.4.1",
+    "@types/node": "^16.9.6",
+    "dotenv": "^10.0.0",
+    "nanoid": "^3.1.25",
+    "p-limit": "^3.1.0",
+    "prettier": "^2.3.2",
+    "rmrk-tools": "2.0.11",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5"
+  }
+}
