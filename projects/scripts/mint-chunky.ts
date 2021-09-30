@@ -12,7 +12,10 @@ import { pinSingleMetadataFromDir } from "./pinata-utils";
 import { createBase } from "./create-base";
 import { nanoid } from "nanoid";
 
-export const addBaseResource = async (chunkyBlock: number) => {
+export const addBaseResource = async (
+  chunkyBlock: number,
+  baseBlock: number
+) => {
   try {
     console.log("ADD BASE RESOURCE TO CHUNKY NFT START -------");
     await cryptoWaitReady();
@@ -29,7 +32,14 @@ export const addBaseResource = async (chunkyBlock: number) => {
     const api = await getApi(ws);
     const serialNumbers = [1, 2, 3, 4];
 
-    const BASE_ID = "base-13-CHNKBS";
+    const baseEntity = new Base(
+      baseBlock,
+      CHUNKY_BASE_SYMBOL,
+      encodeAddress(kp.address, 2),
+      "svg"
+    );
+
+    const BASE_ID = baseEntity.getId();
 
     const resourceRemarks = [];
 
@@ -37,39 +47,41 @@ export const addBaseResource = async (chunkyBlock: number) => {
       const nft = new NFT({
         block: chunkyBlock,
         collection: collectionId,
-        symbol: `chunky_bird_${sn}`,
+        symbol: `chunky_${sn}`,
         transferable: 1,
         sn: `${sn}`.padStart(8, "0"),
         owner: encodeAddress(accounts[0].address, 2),
         metadata: "",
       });
 
-      const baseresIds = ['nCkINZNg', 'b4HIImJD', 'gIs2u9fw', 'JoFWZKXr']
-      //
-      // resourceRemarks.push(
-      //   nft.resadd({
-      //     base: BASE_ID,
-      //     id: baseResId,
-      //     parts: [
-      //       `chunky_body_${sn}`,
-      //       `chunky_head_${sn}`,
-      //       `chunky_hand_${sn}`,
-      //       "chunky_objectLeft",
-      //       "chunky_objectRight",
-      //     ],
-      //     thumb: `ipfs://ipfs/${ASSETS_CID}/Chunky%20Preview.png`,
-      //   })
-      // );
+      const baseResId = nanoid(8);
+
+      resourceRemarks.push(
+        nft.resadd({
+          base: BASE_ID,
+          id: baseResId,
+          parts: [
+            `chunky_body_${sn}`,
+            `chunky_head_${sn}`,
+            `chunky_hand_${sn}`,
+            "chunky_objectLeft",
+            "chunky_objectRight",
+          ],
+          thumb: `ipfs://ipfs/${ASSETS_CID}/Chunky%20Preview.png`,
+        })
+      );
 
       if (sn === 4) {
         const secondaryArtResId = nanoid(8);
-        resourceRemarks.push(nft.resadd({
-          src: `ipfs://ipfs/${ASSETS_CID}/chunky_altresource.jpg`,
-          thumb: `ipfs://ipfs/${ASSETS_CID}/chunky_altresource.jpg`,
-          id: secondaryArtResId,
-        }));
+        resourceRemarks.push(
+          nft.resadd({
+            src: `ipfs://ipfs/${ASSETS_CID}/chunky_altresource.jpg`,
+            thumb: `ipfs://ipfs/${ASSETS_CID}/chunky_altresource.jpg`,
+            id: secondaryArtResId,
+          })
+        );
 
-        resourceRemarks.push(nft.setpriority([secondaryArtResId, baseresIds[sn - 1]]))
+        resourceRemarks.push(nft.setpriority([secondaryArtResId, baseResId]));
       }
     });
 
@@ -170,7 +182,7 @@ export const mintChunky = async () => {
       const nft = new NFT({
         block: 0,
         collection: collectionId,
-        symbol: `chunky_bird_${sn}`,
+        symbol: `chunky_${sn}`,
         transferable: 1,
         sn: `${sn}`.padStart(8, "0"),
         owner: encodeAddress(accounts[0].address, 2),

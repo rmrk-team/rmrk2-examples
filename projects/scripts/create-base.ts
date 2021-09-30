@@ -134,6 +134,7 @@ export const createBase = async () => {
     );
     console.log("Chunky Base created at block: ", block);
     return block;
+    return block;
   } catch (error: any) {
     console.error(error);
   }

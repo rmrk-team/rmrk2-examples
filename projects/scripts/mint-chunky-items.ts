@@ -3,10 +3,11 @@ import {
   CHUNKY_COLLECTION_SYMBOL,
   CHUNKY_ITEMS_COLLECTION_SYMBOL,
   WS_URL,
+  CHUNKY_BASE_SYMBOL
 } from "./constants";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { getApi, getKeyringFromUri, getKeys, sendAndFinalize } from "./utils";
-import { Collection, NFT } from "rmrk-tools";
+import { Collection, NFT, Base } from "rmrk-tools";
 import { u8aToHex } from "@polkadot/util";
 import { encodeAddress } from "@polkadot/keyring";
 import { nanoid } from "nanoid";
@@ -43,7 +44,7 @@ const chunkyItems = [
   },
 ];
 
-export const mintItems = async () => {
+export const mintItems = async (chunkyBlock: number, baseBlock: number) => {
   try {
     console.log("CREATE CHUNKY ITEMS START -------");
     await cryptoWaitReady();
@@ -56,6 +57,18 @@ export const mintItems = async () => {
     const collectionId = Collection.generateId(
       u8aToHex(accounts[0].publicKey),
       CHUNKY_ITEMS_COLLECTION_SYMBOL
+    );
+
+    const chunkyCollectionId = Collection.generateId(
+      u8aToHex(accounts[0].publicKey),
+      CHUNKY_COLLECTION_SYMBOL
+    );
+
+    const baseEntity = new Base(
+      baseBlock,
+      CHUNKY_BASE_SYMBOL,
+      encodeAddress(kp.address, 2),
+      "svg"
     );
 
     await createItemsCollection();
@@ -114,18 +127,26 @@ export const mintItems = async () => {
             thumb: `ipfs://ipfs/${ASSETS_CID}/Chunky Items/${item.thumb}`,
             id: nanoid(8),
             slot: resource.includes("left")
-              ? "base-13-CHNKBS.chunky_objectLeft"
-              : "base-13-CHNKBS.chunky_objectRight",
+              ? `${baseEntity.getId()}.chunky_objectLeft`
+              : `${baseEntity.getId()}.chunky_objectRight`,
           })
         );
       });
 
-      resaddSendRemarks.push(
-        nft.send(`209-d43593c715a56da27d-CHNK-chunky_bird_${sn}-0000000${sn}`)
-      );
+      const chunkyNft = new NFT({
+        block: chunkyBlock,
+        collection: chunkyCollectionId,
+        symbol: `chunky_${sn}`,
+        transferable: 1,
+        sn: `${sn}`.padStart(8, "0"),
+        owner: encodeAddress(accounts[0].address, 2),
+        metadata: "",
+      });
+
+      resaddSendRemarks.push(nft.send(chunkyNft.getId()));
       resaddSendRemarks.push(
         nft.equip(
-          `base-13-CHNKBS.${
+          `${baseEntity.getId()}.${
             index % 2 ? "chunky_objectLeft" : "chunky_objectRight"
           }`
         )
