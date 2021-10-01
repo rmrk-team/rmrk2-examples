@@ -1,7 +1,7 @@
 # RMRK2 Examples
 
 This repository showcases a collection of examples on how to use RMRK2 in it's current implementation (using `system.remark` exstrinsic)
-You can find Crowdcast demo of using this code here: https://www.crowdcast.io/e/buid
+You can find Crowdcast demo of using this code here: https://www.crowdcast.io/e/buidl
 
 
 ![Chunkies](chunkies.png)
