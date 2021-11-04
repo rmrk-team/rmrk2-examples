@@ -75,9 +75,6 @@ const SvgResourceComposer = ({ nft }: IProps) => {
     (first, second) => first?.z! - second.z!,
   );
 
-  console.log("hello");
-  console.log(parts);
-
   return (
     <Flex
       direction="column"
@@ -97,7 +94,7 @@ const SvgResourceComposer = ({ nft }: IProps) => {
                 key={`svg-resource-composer-part-${part.src}`}
                 style={{ zIndex: part.z }}
                 src={part.src.replace('ipfs://', 'https://rmrk.mypinata.cloud/')}
-                width={'80%'}
+                width={'100%'}
                 height={'100%'}
                 cacheRequests={false}
                 uniquifyIDs={true}
