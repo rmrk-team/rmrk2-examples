@@ -16,7 +16,7 @@
     "next": "11.1.2",
     "ramda": "^0.27.1",
     "react": "17.0.2",
-    "react-dom": "^17.0.2",
+    "react-dom": "17.0.2",
     "react-inlinesvg": "^2.3.0",
     "rmrk-tools": "^2.0.11"
   },
