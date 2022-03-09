@@ -1,7 +1,12 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
-    "lib": ["es2019", "DOM"],
+    "lib": [
+      "es2017",
+      "es2019",
+      "es2020",
+      "esnext"
+    ],
     "target": "ES2017",
     "module": "commonjs",
     "moduleResolution": "node",
@@ -10,15 +15,6 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "paths": {
-      "*": [
-        "node_modules/*"
-      ]
-    }
-  },
-  "files": [
-    "scripts/*.ts",
-    "scripts/**/*.ts"
-  ]
+    "allowSyntheticDefaultImports": true
+  }
 }
