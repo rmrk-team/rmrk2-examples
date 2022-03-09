@@ -114,7 +114,7 @@ export const createChunkyCollection = async () => {
       "RMRK2 demo chunky collection",
       {
         description: "This is Chunky! RMRK2 demo nested NFT",
-        external_url: "https://rmrk.app",
+        externalUri: "https://rmrk.app",
         properties: {},
       }
     );
@@ -168,7 +168,7 @@ export const mintChunky = async () => {
         `RMRK2 demo chunky NFT #${sn}`,
         {
           description: `This is Chunky #${sn}! RMRK2 demo nested NFT`,
-          external_url: "https://rmrk.app",
+          externalUri: "https://rmrk.app",
           properties: {
             rarity: {
               type: "string",
