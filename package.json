@@ -9,6 +9,9 @@
   "devDependencies": {
     "prettier": "^2.4.1"
   },
+  "scripts": {
+    "dev": "yarn workspace rmrk2-demo dev"
+  },
   "workspaces": {
     "packages": [
       "projects/*"
