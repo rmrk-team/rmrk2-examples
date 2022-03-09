@@ -82,7 +82,7 @@ export const mintItems = async (chunkyBlock: number, baseBlock: number) => {
         item.name,
         {
           description: item.description,
-          external_url: "https://rmrk.app",
+          externalUri: "https://rmrk.app",
         }
       );
 
@@ -186,7 +186,7 @@ export const createItemsCollection = async () => {
       "RMRK2 demo chunky items collection",
       {
         description: "This is Chunky items! RMRK2 demo nested NFTs",
-        external_url: "https://rmrk.app",
+        externalUri: "https://rmrk.app",
         properties: {},
       }
     );
