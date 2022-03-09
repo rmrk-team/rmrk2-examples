@@ -88,7 +88,7 @@ export const addBaseResource = async (
     const txs = resourceRemarks.map((remark) => api.tx.system.remark(remark));
     const tx = api.tx.utility.batch(txs);
     const { block } = await sendAndFinalize(tx, kp);
-    console.log("Chunky NFT minted at block: ", block);
+    console.log("Chunky base resources added at block: ", block);
   } catch (error: any) {
     console.error(error);
   }
