@@ -17,7 +17,7 @@ export const simpleSend = async () => {
     }
     await cryptoWaitReady();
     const ws = WS_URL;
-    const phrase = process.env.MNEMONIC_PHRASE;
+    const phrase = process.env.PRIVAKE_KEY;
     const kp = getKeyringFromUri(phrase);
 
     const api = await getApi(ws);

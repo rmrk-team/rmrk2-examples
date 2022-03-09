@@ -50,7 +50,7 @@ export const mintItems = async (chunkyBlock: number, baseBlock: number) => {
     await cryptoWaitReady();
     const accounts = getKeys();
     const ws = WS_URL;
-    const phrase = process.env.MNEMONIC_PHRASE;
+    const phrase = process.env.PRIVAKE_KEY;
     const api = await getApi(ws);
     const kp = getKeyringFromUri(phrase);
 
@@ -171,7 +171,7 @@ export const createItemsCollection = async () => {
     await cryptoWaitReady();
     const accounts = getKeys();
     const ws = WS_URL;
-    const phrase = process.env.MNEMONIC_PHRASE;
+    const phrase = process.env.PRIVAKE_KEY;
     const api = await getApi(ws);
     const kp = getKeyringFromUri(phrase);
 

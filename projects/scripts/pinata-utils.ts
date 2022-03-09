@@ -1,11 +1,12 @@
+import {sleep} from "./utils";
+
 require('dotenv').config();
-import { NFTMetadata } from 'rmrk-tools/dist/classes/nft';
+import { Metadata } from 'rmrk-tools/dist/tools/types';
 import pLimit from 'p-limit';
 import { Readable } from 'stream';
 import fs from 'fs';
 // @ts-ignore
 import pinataSDK, { PinataOptions, PinataPinOptions } from '@pinata/sdk';
-import { sleep } from './utils';
 
 const defaultOptions: Partial<PinataPinOptions> = {
   pinataOptions: {
@@ -21,13 +22,13 @@ export type StreamPinata = Readable & {
 };
 const limit = pLimit(1);
 
-const pinFileStreamToIpfs = async (file: StreamPinata, name?: string) => {
+export const pinFileStreamToIpfs = async (file: StreamPinata, name?: string) => {
   const options = { ...defaultOptions, pinataMetadata: { name } };
   const result = await pinata.pinFileToIPFS(file, options);
   return result.IpfsHash;
 };
 
-export const uploadAndPinIpfsMetadata = async (metadataFields: NFTMetadata): Promise<string> => {
+export const uploadAndPinIpfsMetadata = async (metadataFields: Metadata): Promise<string> => {
   const options = {
     ...defaultOptions,
     pinataMetadata: { name: metadataFields.name },
@@ -45,7 +46,7 @@ export const pinSingleMetadataFromDir = async (
   dir: string,
   path: string,
   name: string,
-  metadataBase: Partial<NFTMetadata>,
+  metadataBase: Partial<Metadata>,
 ) => {
   try {
     const imageFile = await fsPromises.readFile(`${process.cwd()}${dir}/${path}`);
@@ -58,7 +59,7 @@ export const pinSingleMetadataFromDir = async (
 
     const imageCid = await pinFileStreamToIpfs(stream, name);
     console.log(`NFT ${path} IMAGE CID: `, imageCid);
-    const metadata: NFTMetadata = { ...metadataBase, name, image: `ipfs://ipfs/${imageCid}` };
+    const metadata: Metadata = { ...metadataBase, name, mediaUri: `ipfs://ipfs/${imageCid}` };
     const metadataCid = await uploadAndPinIpfsMetadata(metadata);
     await sleep(500);
     console.log(`NFT ${name} METADATA: `, metadataCid);

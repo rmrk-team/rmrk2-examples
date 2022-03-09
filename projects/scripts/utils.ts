@@ -10,7 +10,7 @@ import { CodecHash } from "@polkadot/types/interfaces";
 export const getKeys = (): KeyringPair[] => {
   const k = [];
   const keyring = new Keyring({ type: "sr25519" });
-  k.push(keyring.addFromUri(process.env.MNEMONIC_PHRASE));
+  k.push(keyring.addFromUri(process.env.PRIVAKE_KEY));
   return k;
 };
 

@@ -3,6 +3,7 @@
 This repository showcases a collection of examples on how to use RMRK2 in it's current implementation (using `system.remark` exstrinsic)
 You can find Crowdcast demo of using this code here: https://www.crowdcast.io/e/buidl
 
+This is a monorepo, so do `yarn install` from the root of this repo
 
 ![Chunkies](chunkies.png)
 

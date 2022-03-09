@@ -9,7 +9,6 @@ import {
 import { Base, Collection, NFT } from "rmrk-tools";
 import { u8aToHex } from "@polkadot/util";
 import { pinSingleMetadataFromDir } from "./pinata-utils";
-import { createBase } from "./create-base";
 import { nanoid } from "nanoid";
 
 export const addBaseResource = async (
@@ -21,7 +20,7 @@ export const addBaseResource = async (
     await cryptoWaitReady();
     const accounts = getKeys();
     const ws = WS_URL;
-    const phrase = process.env.MNEMONIC_PHRASE;
+    const phrase = process.env.PRIVAKE_KEY;
     const kp = getKeyringFromUri(phrase);
 
     const collectionId = Collection.generateId(
@@ -100,7 +99,7 @@ export const createChunkyCollection = async () => {
     await cryptoWaitReady();
     const accounts = getKeys();
     const ws = WS_URL;
-    const phrase = process.env.MNEMONIC_PHRASE;
+    const phrase = process.env.PRIVAKE_KEY;
     const api = await getApi(ws);
     const kp = getKeyringFromUri(phrase);
 
@@ -148,7 +147,7 @@ export const mintChunky = async () => {
     await cryptoWaitReady();
     const accounts = getKeys();
     const ws = WS_URL;
-    const phrase = process.env.MNEMONIC_PHRASE;
+    const phrase = process.env.PRIVAKE_KEY;
     const kp = getKeyringFromUri(phrase);
 
     const collectionId = Collection.generateId(
