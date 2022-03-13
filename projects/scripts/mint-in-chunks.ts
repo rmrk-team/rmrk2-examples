@@ -327,7 +327,7 @@ export const mintInChunksDemo = async () => {
       let chunkIndex = 0;
 
       for (const recipientChunk of recipientsChunked) {
-        await sleep(1500);
+        await sleep(90000);
         const remarks = [];
 
         recipientChunk.forEach((recipient, index) => {
