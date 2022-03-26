@@ -316,7 +316,6 @@ export const mintInChunksDemo = async () => {
       }
 
       const metadataCid = await uploadAndPinIpfsMetadata({
-        image: `ipfs://ipfs/${thumbCid}`,
         thumbnailUri: `ipfs://ipfs/${thumbCid}`,
         description: chunksMintDemoMintItem.description,
         name: chunksMintDemoMintItem.title,
