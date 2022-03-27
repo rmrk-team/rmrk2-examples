@@ -20,7 +20,7 @@ import { Resource } from "rmrk-tools/dist/classes/nft";
 const STAMPS_FOR_UKRAINE_ASSETS_CID =
   "QmW8kMq1rQEj7ayiPU3ii1fVhR2gN5MFTohVxwLENTCMv6";
 
-const SYMBOL = "STMPFRUKRN";
+const SYMBOL = "STAMPFRUKRN";
 const SYMBOL_BOOK = "STMPBK";
 const SYMBOL_STAMP = "STMP";
 
@@ -219,7 +219,7 @@ export const createBase = async () => {
       0,
       SYMBOL,
       issuer,
-      "png",
+      "svg",
       baseParts,
       undefined,
       baseMetadataCid
@@ -386,13 +386,13 @@ export const mintStamps = async () => {
       const metadata = stampMetadata[slotPartId];
 
       const metadataCidEven = await uploadAndPinIpfsMetadata({
-        mediaUri: `ipfs://ipfs/${metadata.thumbs[0]}`,
+        mediaUri: `ipfs://ipfs/${STAMPS_FOR_UKRAINE_ASSETS_CID}/${metadata.thumbs[0]}`,
         description: metadata.description,
         name: metadata.name,
       });
 
       const metadataCidOdd = await uploadAndPinIpfsMetadata({
-        mediaUri: `ipfs://ipfs/${metadata.thumbs[1]}`,
+        mediaUri: `ipfs://ipfs/${STAMPS_FOR_UKRAINE_ASSETS_CID}/${metadata.thumbs[1]}`,
         description: metadata.description,
         name: metadata.name,
       });
@@ -445,14 +445,14 @@ export const mintStamps = async () => {
           for (let i = 0; i < 6; i++) {
             const res: Resource = {
               thumb: isOdd
-                ? `ipfs://ipfs/${metadata.thumbs[0]}`
-                : `ipfs://ipfs/${metadata.thumbs[1]}`,
+                ? `ipfs://ipfs/${STAMPS_FOR_UKRAINE_ASSETS_CID}/${metadata.thumbs[0]}`
+                : `ipfs://ipfs/${STAMPS_FOR_UKRAINE_ASSETS_CID}/${metadata.thumbs[1]}`,
               src: `ipfs://ipfs/${STAMPS_FOR_UKRAINE_ASSETS_CID}/Stamp_${
                 stampIndex + 1
               }_slot_position_${i + 1}.svg`,
               id: `${SYMBOL_STAMP}_${nanoid(8)}`,
               metadata: isOdd ? metadataCidOdd : metadataCidEven,
-                slot: `${base.getId()}.Stamp ${stampIndex + 1}`
+                slot: `${base.getId()}.Stamp ${i + 1}`
             };
 
             resaddAndSendRemarks.push(nft.resadd(res));
@@ -487,3 +487,5 @@ export const mintStamps = async () => {
 };
 
 mintStamps();
+
+// createBase();
