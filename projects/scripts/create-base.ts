@@ -6,9 +6,11 @@ import {
   WS_URL,
 } from "./constants";
 import { cryptoWaitReady, encodeAddress } from "@polkadot/util-crypto";
-import { getApi, getKeyringFromUri, getKeys, sendAndFinalize } from "./utils";
+import { getKeyringFromUri, getKeys } from "./utils";
 import { Collection, Base } from "rmrk-tools";
 import { u8aToHex } from "@polkadot/util";
+import {getApi} from "./get-polkadot-api";
+import {signAndSendWithRetry} from "./sign-and-send-with-retry";
 
 export const fixedParts: IBasePart[] = [
   {
@@ -109,7 +111,7 @@ export const createBase = async () => {
     const accounts = getKeys();
     const ws = WS_URL;
     const phrase = process.env.PRIVAKE_KEY;
-    const api = await getApi(ws);
+    const api = await getApi();
     const kp = getKeyringFromUri(phrase);
 
     const collectionId = Collection.generateId(
@@ -128,7 +130,7 @@ export const createBase = async () => {
       baseParts
     );
 
-    const { block } = await sendAndFinalize(
+    const { block } = await signAndSendWithRetry(
       api.tx.system.remark(baseEntity.base()),
       kp
     );

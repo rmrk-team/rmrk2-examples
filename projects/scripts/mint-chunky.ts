@@ -1,5 +1,5 @@
 import { cryptoWaitReady, encodeAddress } from "@polkadot/util-crypto";
-import { getApi, getKeyringFromUri, getKeys, sendAndFinalize } from "./utils";
+import { getKeyringFromUri, getKeys } from "./utils";
 import {
   ASSETS_CID,
   CHUNKY_BASE_SYMBOL,
@@ -10,6 +10,8 @@ import { Base, Collection, NFT } from "rmrk-tools";
 import { u8aToHex } from "@polkadot/util";
 import { pinSingleMetadataFromDir } from "./pinata-utils";
 import { nanoid } from "nanoid";
+import {getApi} from "./get-polkadot-api";
+import {signAndSendWithRetry} from "./sign-and-send-with-retry";
 
 export const addBaseResource = async (
   chunkyBlock: number,
@@ -19,7 +21,6 @@ export const addBaseResource = async (
     console.log("ADD BASE RESOURCE TO CHUNKY NFT START -------");
     await cryptoWaitReady();
     const accounts = getKeys();
-    const ws = WS_URL;
     const phrase = process.env.PRIVAKE_KEY;
     const kp = getKeyringFromUri(phrase);
 
@@ -28,7 +29,7 @@ export const addBaseResource = async (
       CHUNKY_COLLECTION_SYMBOL
     );
 
-    const api = await getApi(ws);
+    const api = await getApi();
     const serialNumbers = [1, 2, 3, 4];
 
     const baseEntity = new Base(
@@ -86,7 +87,7 @@ export const addBaseResource = async (
 
     const txs = resourceRemarks.map((remark) => api.tx.system.remark(remark));
     const tx = api.tx.utility.batch(txs);
-    const { block } = await sendAndFinalize(tx, kp);
+    const { block } = await signAndSendWithRetry(tx, kp);
     console.log("Chunky base resources added at block: ", block);
   } catch (error: any) {
     console.error(error);
@@ -98,9 +99,8 @@ export const createChunkyCollection = async () => {
     console.log("CREATE CHUNKY COLLECTION START -------");
     await cryptoWaitReady();
     const accounts = getKeys();
-    const ws = WS_URL;
     const phrase = process.env.PRIVAKE_KEY;
-    const api = await getApi(ws);
+    const api = await getApi();
     const kp = getKeyringFromUri(phrase);
 
     const collectionId = Collection.generateId(
@@ -128,7 +128,7 @@ export const createChunkyCollection = async () => {
       collectionMetadataCid
     );
 
-    const { block } = await sendAndFinalize(
+    const { block } = await signAndSendWithRetry(
       api.tx.system.remark(ItemsCollection.create()),
       kp
     );
@@ -146,7 +146,6 @@ export const mintChunky = async () => {
     console.log("CREATE CHUNKY NFT START -------");
     await cryptoWaitReady();
     const accounts = getKeys();
-    const ws = WS_URL;
     const phrase = process.env.PRIVAKE_KEY;
     const kp = getKeyringFromUri(phrase);
 
@@ -157,7 +156,7 @@ export const mintChunky = async () => {
 
     await createChunkyCollection();
 
-    const api = await getApi(ws);
+    const api = await getApi();
 
     const serialNumbers = [1, 2, 3, 4];
 
@@ -195,7 +194,7 @@ export const mintChunky = async () => {
 
     const txs = remarks.map((remark) => api.tx.system.remark(remark));
     const tx = api.tx.utility.batchAll(txs);
-    const { block } = await sendAndFinalize(tx, kp);
+    const { block } = await signAndSendWithRetry(tx, kp);
     console.log("Chunky NFT minted at block: ", block);
     return block;
   } catch (error: any) {

@@ -6,12 +6,14 @@ import {
   CHUNKY_BASE_SYMBOL
 } from "./constants";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
-import { getApi, getKeyringFromUri, getKeys, sendAndFinalize } from "./utils";
+import { getKeyringFromUri, getKeys } from "./utils";
 import { Collection, NFT, Base } from "rmrk-tools";
 import { u8aToHex } from "@polkadot/util";
 import { encodeAddress } from "@polkadot/keyring";
 import { nanoid } from "nanoid";
 import {pinSingleMetadataFromDir} from "./pinata-utils";
+import {getApi} from "./get-polkadot-api";
+import {signAndSendWithRetry} from "./sign-and-send-with-retry";
 
 const chunkyItems = [
   {
@@ -51,7 +53,7 @@ export const mintItems = async (chunkyBlock: number, baseBlock: number) => {
     const accounts = getKeys();
     const ws = WS_URL;
     const phrase = process.env.PRIVAKE_KEY;
-    const api = await getApi(ws);
+    const api = await getApi();
     const kp = getKeyringFromUri(phrase);
 
     const collectionId = Collection.generateId(
@@ -103,7 +105,7 @@ export const mintItems = async (chunkyBlock: number, baseBlock: number) => {
 
     const txs = remarks.map((remark) => api.tx.system.remark(remark));
     const batch = api.tx.utility.batch(txs);
-    const { block } = await sendAndFinalize(batch, kp);
+    const { block } = await signAndSendWithRetry(batch, kp);
     console.log("CHUNKY ITEMS MINTED AT BLOCK: ", block);
 
     const resaddSendRemarks = [];
@@ -157,7 +159,7 @@ export const mintItems = async (chunkyBlock: number, baseBlock: number) => {
       api.tx.system.remark(remark)
     );
     const resbatch = api.tx.utility.batch(restxs);
-    const { block: resaddSendBlock } = await sendAndFinalize(resbatch, kp);
+    const { block: resaddSendBlock } = await signAndSendWithRetry(resbatch, kp);
     console.log("CHUNKY ITEMS RESOURCE ADDED AND SENT: ", resaddSendBlock);
     return true;
   } catch (error: any) {
@@ -170,9 +172,8 @@ export const createItemsCollection = async () => {
     console.log("CREATE CHUNKY ITEMS COLLECTION START -------");
     await cryptoWaitReady();
     const accounts = getKeys();
-    const ws = WS_URL;
     const phrase = process.env.PRIVAKE_KEY;
-    const api = await getApi(ws);
+    const api = await getApi();
     const kp = getKeyringFromUri(phrase);
 
     const collectionId = Collection.generateId(
@@ -200,7 +201,7 @@ export const createItemsCollection = async () => {
       collectionMetadataCid
     );
 
-    const { block } = await sendAndFinalize(
+    const { block } = await signAndSendWithRetry(
       api.tx.system.remark(ItemsCollection.create()),
       kp
     );
