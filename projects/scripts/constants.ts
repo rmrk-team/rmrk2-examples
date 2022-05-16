@@ -1,4 +1,4 @@
-export const isProd = true;
+export const isProd = false;
 
 export const WS_URL = isProd ? 'wss://kusama-rpc.polkadot.io' : 'wss://staging.node.rmrk.app';
 const backupWsEndpoint = isProd ? 'wss://kusama.api.onfinality.io/public-ws' : 'wss://staging.node.rmrk.app'
