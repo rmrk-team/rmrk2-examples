@@ -2,9 +2,7 @@ require("dotenv").config();
 import { Base, Collection, NFT } from "rmrk-tools";
 import {
   chunkArray,
-  getApi,
   getKeyringFromUri,
-  sendAndFinalize,
   sleep,
 } from "./utils";
 import { u8aToHex } from "@polkadot/util";
@@ -16,6 +14,8 @@ import { IBasePart } from "rmrk-tools/dist/classes/base";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { nanoid } from "nanoid";
 import { Resource } from "rmrk-tools/dist/classes/nft";
+import signAndSendWithRetry from './sign-and-send-with-retry';
+import getApi from './get-polkasdot-api';
 
 const STAMPS_FOR_UKRAINE_ASSETS_CID =
   "QmW8kMq1rQEj7ayiPU3ii1fVhR2gN5MFTohVxwLENTCMv6";
@@ -226,11 +226,11 @@ export const createBase = async () => {
     );
 
     remarks.push(base.base());
-    const api = await getApi(ws);
+    const api = await getApi();
 
     const txs = remarks.map((remark) => api.tx.system.remark(remark));
     const tx = api.tx.utility.batch(txs);
-    const { block } = await sendAndFinalize(tx, kp);
+    const { block } = await signAndSendWithRetry(tx, kp);
 
     console.log("done at block:", block);
 
@@ -298,11 +298,11 @@ export const mintBooks = async () => {
         remarks.push(nft.mint());
       });
 
-      const api = await getApi(ws);
+      const api = await getApi();
       const txs = remarks.map((remark) => api.tx.system.remark(remark));
 
       const tx = api.tx.utility.batch(txs);
-      const { block } = await sendAndFinalize(tx, kp);
+      const { block } = await signAndSendWithRetry(tx, kp);
 
       const resaddAndSendRemarks = [];
       recipientChunk.forEach((recipient, index) => {
@@ -423,7 +423,7 @@ export const mintStamps = async () => {
           remarks.push(nft.mint());
         });
 
-        const api = await getApi(ws);
+        const api = await getApi();
         const txs = remarks.map((remark) => api.tx.system.remark(remark));
 
         const tx = api.tx.utility.batch(txs);
