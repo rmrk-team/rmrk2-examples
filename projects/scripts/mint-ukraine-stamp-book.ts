@@ -14,8 +14,8 @@ import { IBasePart } from "rmrk-tools/dist/classes/base";
 import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { nanoid } from "nanoid";
 import { Resource } from "rmrk-tools/dist/classes/nft";
-import signAndSendWithRetry from './sign-and-send-with-retry';
-import getApi from './get-polkasdot-api';
+import { signAndSendWithRetry } from './sign-and-send-with-retry';
+import { getApi } from './get-polkasdot-api';
 
 const STAMPS_FOR_UKRAINE_ASSETS_CID =
   "QmW8kMq1rQEj7ayiPU3ii1fVhR2gN5MFTohVxwLENTCMv6";
