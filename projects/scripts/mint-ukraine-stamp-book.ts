@@ -15,7 +15,7 @@ import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { nanoid } from "nanoid";
 import { Resource } from "rmrk-tools/dist/classes/nft";
 import { signAndSendWithRetry } from './sign-and-send-with-retry';
-import { getApi } from './get-polkasdot-api';
+import { getApi } from './get-polkadot-api';
 
 const STAMPS_FOR_UKRAINE_ASSETS_CID =
   "QmW8kMq1rQEj7ayiPU3ii1fVhR2gN5MFTohVxwLENTCMv6";
@@ -347,7 +347,7 @@ export const mintBooks = async () => {
         console.log(`Chunk size: ${rmrkChunk.length}`);
         const tx = api.tx.utility.batch(rmrkChunk);
         console.log("tx create");
-        const { block } = await sendAndFinalize(tx, kp);
+        const { block } = await signAndSendWithRetry(tx, kp);
         console.log("Book base resource added: ", block);
       }
 
@@ -427,7 +427,7 @@ export const mintStamps = async () => {
         const txs = remarks.map((remark) => api.tx.system.remark(remark));
 
         const tx = api.tx.utility.batch(txs);
-        const { block } = await sendAndFinalize(tx, kp);
+        const { block } = await signAndSendWithRetry(tx, kp);
 
         const resaddAndSendRemarks = [];
         recipientChunk.forEach((recipient, index) => {
@@ -471,7 +471,7 @@ export const mintStamps = async () => {
           console.log(`Chunk size: ${rmrkChunk.length}`);
           const tx = api.tx.utility.batch(rmrkChunk);
           console.log("tx create");
-          const { block } = await sendAndFinalize(tx, kp);
+          const { block } = await signAndSendWithRetry(tx, kp);
           console.log("Stamp base resource added: ", block);
         }
 
