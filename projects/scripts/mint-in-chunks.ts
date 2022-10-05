@@ -1,3 +1,5 @@
+import {getApi} from "./get-polkadot-api";
+
 require("dotenv").config();
 
 import { Resource } from "rmrk-tools/dist/classes/nft";
@@ -5,10 +7,9 @@ import { cryptoWaitReady } from "@polkadot/util-crypto";
 import { isProd, WS_URL } from "./constants";
 import {
     chunkArray,
-    getApi,
     getKeyringFromUri,
     getKeys,
-    sendAndFinalize, sleep,
+    sleep,
 } from "./utils";
 import { Collection, NFT } from "rmrk-tools";
 import { encodeAddress } from "@polkadot/keyring";
@@ -22,6 +23,7 @@ import {
 import { IProperties } from "rmrk-tools/dist/tools/types";
 import { Readable } from "stream";
 import { u8aToHex } from "@polkadot/util";
+import {signAndSendWithRetry} from "./sign-and-send-with-retry";
 const BASE_ID = isProd ? "CHANGEME" : "CHANGEME";
 
 const fsPromises = fs.promises;
@@ -316,7 +318,6 @@ export const mintInChunksDemo = async () => {
       }
 
       const metadataCid = await uploadAndPinIpfsMetadata({
-        image: `ipfs://ipfs/${thumbCid}`,
         thumbnailUri: `ipfs://ipfs/${thumbCid}`,
         description: chunksMintDemoMintItem.description,
         name: chunksMintDemoMintItem.title,
@@ -366,11 +367,11 @@ export const mintInChunksDemo = async () => {
           remarks.push(nft.mint());
         });
 
-        const api = await getApi(ws);
+        const api = await getApi();
         const txs = remarks.map((remark) => api.tx.system.remark(remark));
 
         const tx = api.tx.utility.batch(txs);
-        const { block } = await sendAndFinalize(tx, kp);
+        const { block } = await signAndSendWithRetry(tx, kp);
         console.log("Chunks mint demo NFTs minted at block: ", block);
 
         const resourcesPinned: TomoMintingResource[] = [];
@@ -447,7 +448,7 @@ export const mintInChunksDemo = async () => {
           console.log(`Chunk size: ${rmrkChunk.length}`);
           const tx = api.tx.utility.batch(rmrkChunk);
           console.log("tx create");
-          const { block } = await sendAndFinalize(tx, kp);
+          const { block } = await signAndSendWithRetry(tx, kp);
           console.log("Chunks mint demo resource added: ", block);
         }
 

@@ -1,6 +1,7 @@
 import { cryptoWaitReady } from "@polkadot/util-crypto";
-import { getApi, getKeyringFromUri, sendAndFinalize } from "./utils";
-import { WS_URL } from "./constants";
+import { getKeyringFromUri } from "./utils";
+import { getApi } from "./get-polkadot-api";
+import { signAndSendWithRetry } from "./sign-and-send-with-retry";
 
 export const simpleSend = async () => {
   try {
@@ -16,18 +17,17 @@ export const simpleSend = async () => {
       throw new Error("RECIPIENT NOT PASSED");
     }
     await cryptoWaitReady();
-    const ws = WS_URL;
     const phrase = process.env.PRIVAKE_KEY;
     const kp = getKeyringFromUri(phrase);
 
-    const api = await getApi(ws);
+    const api = await getApi();
 
     const remark = api.tx.system.remark(
       `RMRK::SEND::2.0.0::${nftId}::${recipient}`
     );
 
     const tx = api.tx.utility.batchAll([remark]);
-    const { block } = await sendAndFinalize(tx, kp);
+    const { block } = await signAndSendWithRetry(tx, kp);
     console.log(`Sent NFT ${nftId} at block: `, block);
     return block;
   } catch (error: any) {
